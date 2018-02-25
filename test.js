@@ -5,8 +5,10 @@ const delayer = require('./delayer')
 
 describe('Delayer', () => {
 	it(
-		'should work as expected...',
+		'should complete when it receives a payload with a delay value of 4 seconds or greater.',
 		marbles(m => {
+			console.log = null
+
 			Observable.prototype.delay = jest
 				.fn()
 				.mockImplementationOnce(() => m.cold('a|', values))
@@ -21,9 +23,12 @@ describe('Delayer', () => {
 				d: { value: 'delta', delay: 4000 }
 			}
 
+			const producer = m.hot('^a-b--c---d|', values)
 			const expected = m.hot('^a-b--c---|', values)
 
-			m.expect(delayer(m.hot('^a-b--c---d|', values))).toBeObservable(expected)
+			const observable = delayer(producer)
+
+			m.expect(observable).toBeObservable(expected)
 		})
 	)
 })

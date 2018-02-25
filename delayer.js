@@ -8,6 +8,6 @@ require('rxjs/add/operator/do')
 
 module.exports = subject =>
 	Observable.from(subject)
-		.concatMap(x => Observable.of(x).delay(x.delay))
 		.takeWhile(x => x.delay < 4000)
+		.concatMap(x => Observable.of(x.value).delay(x.delay))
 		.do(console.log)
